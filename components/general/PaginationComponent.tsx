@@ -32,7 +32,7 @@ export function PaginationComponent({
   const generatePaginationItems = () => {
     const items = [];
 
-    if (totalPages <= 5) {
+    if (totalPages <= 6) {
       for (let i = 1; i <= totalPages; i++) {
         items.push(i);
       }

@@ -235,6 +235,11 @@ export async function deleteJobPost(jobId: string) {
     },
   });
 
+  await inngest.send({
+    name: "job/cancel.expiration",
+    data: { jobId: jobId },
+  });
+
   return redirect("/my-jobs");
 }
 
@@ -266,3 +271,42 @@ export async function unsaveJobPost(savedJobPostId: string) {
 
   revalidatePath(`/job/${data.jobId}`);
 }
+
+export async function editJobPost(
+  jobId: string,
+  data: z.infer<typeof jobSchema>
+) {
+  const user = await requireUser();
+
+  const req = await request();
+
+  const decision = await aj.protect(req);
+
+  if (decision.isDenied()) {
+    throw new Error("Forbidden");
+  }
+  
+  const validatedData = jobSchema.parse(data);
+
+  await prisma.jobPost.update({
+    where: {
+      id: jobId,
+      company: {
+        userId: user.id,
+      },
+    },
+    data: {
+      jobDescription: validatedData.jobDescription,
+      jobTitle: validatedData.jobTitle,
+      employmentType: validatedData.employmentType,
+      location: validatedData.location,
+      salaryFrom: validatedData.salaryFrom,
+      salaryTo: validatedData.salaryTo,
+      listingDuration: validatedData.listingDuration,
+      benefits: validatedData.benefits,
+    },
+  });
+  
+  return redirect('/my-jobs');
+}
+

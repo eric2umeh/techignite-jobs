@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { EmptyState } from "@/components/general/EmptyState";
 import React from "react";
 
@@ -55,9 +54,12 @@ const FavoritesPage = async () => {
 
   return (
     <div className="grid grid-cols-1 mt-5   gap-4">
-      {favorites.map((favorite: any) => (
-        <JobCard job={favorite.job} key={favorite.job.id} />
-      ))}
+      {favorites.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (favorite: any) => (
+          <JobCard job={favorite.job} key={favorite.job.id} />
+        )
+      )}
     </div>
   );
 };

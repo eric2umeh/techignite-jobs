@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { EmptyState } from "@/components/general/EmptyState";
 import React from "react";
 

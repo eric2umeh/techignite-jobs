@@ -37,7 +37,7 @@ const LoadingMyJobs = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {[...Array(10)].map((_, index) => (
+            {[...Array(11)].map((_, index) => (
               <TableRow key={index}>
                 <TableCell>
                   <Skeleton className="size-10 rounded-lg" />

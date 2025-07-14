@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function JobListingsLoading() {
   return (
     <div className="flex flex-col gap-6">
-      {[...Array(10)].map((i, index) => (
+      {[...Array(11)].map((i, index) => (
         <Card key={index} className="p-6">
           <div className="flex items-start gap-4">
             <Skeleton className="h-14 w-14 rounded" />

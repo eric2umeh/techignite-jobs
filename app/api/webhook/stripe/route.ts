@@ -42,10 +42,9 @@ export async function POST(req: Request) {
     if (!user) throw new Error("User not found...");
 
     // Update the job post status to PUBLISHED
-    await prisma.jobPost.update({
+    prisma.jobPost.update({
       where: {
         id: jobId,
-        userId: user.id, // Ensure the job belongs to the user
       },
       data: {
         status: "ACTIVE",

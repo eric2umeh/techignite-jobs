@@ -33,6 +33,7 @@ interface iAppProps {
     jobDescription: string
     benefits: string[]
     listingDuration: number
+    // Ensure these enum values exactly match your Prisma schema's JobPostStatus enum
     // Allow status to be null, as it might come from Prisma this way
     status: "ACTIVE" | "INACTIVE" | "EXPIRED" | "DRAFT" | null
     company: {
@@ -64,7 +65,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
       salaryTo: jobPost.salaryTo,
       companyLogo: jobPost.company.logo,
       listingDuration: jobPost.listingDuration,
-      // Provide a fallback for status if it's null
+      // Provide a fallback for status if it's null or undefined
       status: jobPost.status || "ACTIVE",
     },
   })

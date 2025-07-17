@@ -33,7 +33,8 @@ interface iAppProps {
     jobDescription: string
     benefits: string[]
     listingDuration: number
-    status: "ACTIVE" | "INACTIVE" | "EXPIRED" | "DRAFT" // Update to match Prisma enum
+    // Ensure these enum values exactly match your Prisma schema's JobPostStatus enum
+    status: "ACTIVE" | "INACTIVE" | "EXPIRED" | "DRAFT"
     company: {
       location: string
       name: string
@@ -124,6 +125,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Job Status</SelectLabel>
+                        {/* Ensure these values exactly match your Prisma schema's JobPostStatus enum */}
                         <SelectItem value="ACTIVE">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>

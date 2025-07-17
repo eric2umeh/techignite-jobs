@@ -55,7 +55,7 @@ const jobSchema = z.object({
 interface iAppProps {
   companyName: string
   companyWebsite: string
-  companyXAccount: string
+  companyXAccount: string | null
   companyLocation: string
   companyAbout: string
   companyLogo: string

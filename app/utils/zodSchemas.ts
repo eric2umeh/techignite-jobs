@@ -30,6 +30,5 @@ export const jobSchema = z.object({
   companyXAccount: z.string().optional(),
   companyDescription: z.string().min(1, "Company description is required"),
   listingDuration: z.number().min(1, "Listing duration is required"),
-  // Update to match your Prisma enum - common values are ACTIVE, INACTIVE, EXPIRED, DRAFT
   status: z.enum(["ACTIVE", "INACTIVE", "EXPIRED", "DRAFT"]).default("ACTIVE"),
 })

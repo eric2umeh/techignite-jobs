@@ -1,17 +1,17 @@
-import { inngest } from "@/app/utils/inngest/client";
-import {
-  handleJobExpiration,
-  sendPeriodicJobListinngs,
-} from "@/app/utils/inngest/functions";
-import { serve } from "inngest/next";
+import { inngest } from "@/app/utils/inngest/client"
+import { handleJobExpiration, sendPeriodicJobListinngs } from "@/app/utils/inngest/functions"
+import { serve } from "inngest/next"
 
-// ✅ Add console logs here
-console.log("✅ Registered Inngest functions:");
-console.log(" - handleJobExpiration");
-console.log(" - sendPeriodicJobListinngs");
+console.log("✅ Registered Inngest functions:")
+console.log(" - handleJobExpiration")
+console.log(" - sendPeriodicJobListinngs")
 
-// ✅ Register the functions
+// Register the functions with conditional signing key
 export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [handleJobExpiration, sendPeriodicJobListinngs],
-});
+  // Only use signing key in production
+  ...(process.env.NODE_ENV === "production" && {
+    signingKey: process.env.INNGEST_SIGNING_KEY,
+  }),
+})

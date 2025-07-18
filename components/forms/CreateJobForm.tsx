@@ -1,49 +1,34 @@
-"use client";
+"use client"
 
-import { countryList } from "@/app/utils/countriesList";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Textarea } from "../ui/textarea";
-import { XIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import Image from "next/image";
-import { toast } from "sonner";
-import { UploadDropzone } from "../general/UploadThingReExport";
-import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { jobSchema } from "@/app/utils/zodSchemas";
-import { SalaryRangeSelector } from "../general/SalaryRangeSelector";
-import JobDescriptionEditor from "../richTextEditor/JobDescriptionEditor";
-import BenefitsSelector from "../general/BenefitsSelector";
-import { JobListingDurationSelector } from "../general/JobListingDurationSelector";
-import { createJob } from "@/app/actions";
+import { countryList } from "@/app/utils/countriesList"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Input } from "../ui/input"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select"
+import { Textarea } from "../ui/textarea"
+import { XIcon } from "lucide-react"
+import { Button } from "../ui/button"
+import Image from "next/image"
+import { toast } from "sonner"
+import { UploadDropzone } from "../general/UploadThingReExport"
+import { useState } from "react"
+import type { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { jobSchema } from "@/app/utils/zodSchemas" // Ensure this is the correct import for your jobSchema
+import { SalaryRangeSelector } from "../general/SalaryRangeSelector"
+import JobDescriptionEditor from "../richTextEditor/JobDescriptionEditor"
+import BenefitsSelector from "../general/BenefitsSelector"
+import { JobListingDurationSelector } from "../general/JobListingDurationSelector"
+import { createJob } from "@/app/actions"
 
 interface CreateJobFormProps {
-  companyName: string;
-  companyLocation: string;
-  companyAbout: string;
-  companyLogo: string;
-  companyXAccount: string | null;
-  companyWebsite: string;
+  companyName: string
+  companyLocation: string
+  companyAbout: string
+  companyLogo: string
+  companyXAccount: string | null
+  companyWebsite: string
 }
 
 export function CreateJobForm({
@@ -71,27 +56,26 @@ export function CreateJobForm({
       salaryTo: 0,
       companyLogo: companyLogo,
       listingDuration: 30,
+      status: "ACTIVE", // Added the missing status field
     },
-  });
+  })
 
-  const [pending, setPending] = useState(false);
+  const [pending, setPending] = useState(false)
+
   async function onSubmit(values: z.infer<typeof jobSchema>) {
     try {
-      setPending(true);
-
-      await createJob(values);
+      setPending(true)
+      await createJob(values)
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.")
     } finally {
-      setPending(false);
+      setPending(false)
     }
   }
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="col-span-1   lg:col-span-2  flex flex-col gap-8"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="col-span-1   lg:col-span-2  flex flex-col gap-8">
         <Card>
           <CardHeader>
             <CardTitle>Job Information</CardTitle>
@@ -117,10 +101,7 @@ export function CreateJobForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Employment Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Employment Type" />
@@ -136,7 +117,6 @@ export function CreateJobForm({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -150,10 +130,7 @@ export function CreateJobForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Location</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Location" />
@@ -178,7 +155,6 @@ export function CreateJobForm({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -187,15 +163,10 @@ export function CreateJobForm({
               <FormItem>
                 <FormLabel>Salary Range</FormLabel>
                 <FormControl>
-                  <SalaryRangeSelector
-                    control={form.control}
-                    minSalary={30000}
-                    maxSalary={1000000}
-                  />
+                  <SalaryRangeSelector control={form.control} minSalary={30000} maxSalary={1000000} />
                 </FormControl>
                 <FormMessage>
-                  {form.formState.errors.salaryFrom?.message ||
-                    form.formState.errors.salaryTo?.message}
+                  {form.formState.errors.salaryFrom?.message || form.formState.errors.salaryTo?.message}
                 </FormMessage>
               </FormItem>
             </div>
@@ -256,10 +227,7 @@ export function CreateJobForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Location</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Location" />
@@ -284,7 +252,6 @@ export function CreateJobForm({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -302,11 +269,7 @@ export function CreateJobForm({
                         <span className="flex items-center justify-center px-3 border border-r-0 border-input rounded-l-md bg-muted text-muted-foreground text-sm">
                           https://
                         </span>
-                        <Input
-                          {...field}
-                          placeholder="Company Website"
-                          className="rounded-l-none"
-                        />
+                        <Input {...field} placeholder="Company Website" className="rounded-l-none" />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -325,11 +288,7 @@ export function CreateJobForm({
                         <span className="flex items-center justify-center px-3 border border-r-0 border-input rounded-l-md bg-muted text-muted-foreground text-sm">
                           @
                         </span>
-                        <Input
-                          {...field}
-                          placeholder="Company X Account"
-                          className="rounded-l-none"
-                        />
+                        <Input {...field} placeholder="Company X Account" className="rounded-l-none" />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -345,11 +304,7 @@ export function CreateJobForm({
                 <FormItem>
                   <FormLabel>Company Description</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Company Description"
-                      className="min-h-[120px]"
-                      {...field}
-                    />
+                    <Textarea placeholder="Company Description" className="min-h-[120px]" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -367,7 +322,7 @@ export function CreateJobForm({
                       {field.value ? (
                         <div className="relative w-fit">
                           <Image
-                            src={field.value}
+                            src={field.value || "/placeholder.svg"}
                             alt="Company Logo"
                             width={100}
                             height={100}
@@ -387,13 +342,11 @@ export function CreateJobForm({
                         <UploadDropzone
                           endpoint="imageUploader"
                           onClientUploadComplete={(res) => {
-                            field.onChange(res[0].url);
-                            toast.success("Logo uploaded successfully!");
+                            field.onChange(res[0].url)
+                            toast.success("Logo uploaded successfully!")
                           }}
                           onUploadError={() => {
-                            toast.error(
-                              "Something went wrong. Please try again."
-                            );
+                            toast.error("Something went wrong. Please try again.")
                           }}
                         />
                       )}
@@ -430,5 +383,5 @@ export function CreateJobForm({
         </Button>
       </form>
     </Form>
-  );
+  )
 }

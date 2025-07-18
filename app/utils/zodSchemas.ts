@@ -32,3 +32,8 @@ export const jobSchema = z.object({
   listingDuration: z.number().min(1, "Listing duration is required"),
   status: z.enum(["ACTIVE", "INACTIVE", "EXPIRED", "DRAFT"]).default("ACTIVE"),
 })
+
+export const editJobSchema = jobSchema.extend({
+  status: z.enum(["ACTIVE", "INACTIVE", "EXPIRED", "DRAFT"]),
+});
+

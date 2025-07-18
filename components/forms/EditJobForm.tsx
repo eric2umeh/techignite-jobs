@@ -15,7 +15,7 @@ import { useState } from "react"
 import type { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { jobSchema } from "@/app/utils/zodSchemas"
+import { editJobSchema } from "@/app/utils/zodSchemas"
 import { SalaryRangeSelector } from "../general/SalaryRangeSelector"
 import JobDescriptionEditor from "../richTextEditor/JobDescriptionEditor"
 import BenefitsSelector from "../general/BenefitsSelector"
@@ -48,8 +48,8 @@ interface iAppProps {
 }
 
 export function EditJobForm({ jobPost }: iAppProps) {
-  const form = useForm<z.infer<typeof jobSchema>>({
-    resolver: zodResolver(jobSchema),
+  const form = useForm<z.infer<typeof editJobSchema>>({
+    resolver: zodResolver(editJobSchema),
     defaultValues: {
       benefits: jobPost.benefits,
       companyDescription: jobPost.company.about,
@@ -72,7 +72,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
 
   const [pending, setPending] = useState(false)
 
-  async function onSubmit(values: z.infer<typeof jobSchema>) {
+  async function onSubmit(values: z.infer<typeof editJobSchema>) {
     try {
       setPending(true)
       await updateJobPost(values, jobPost.id)

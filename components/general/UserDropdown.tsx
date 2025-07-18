@@ -49,17 +49,6 @@ export function UserDropdown({ email, name, image }: iAppProps) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/favorites">
-              <Heart
-                size={16}
-                strokeWidth={2}
-                className="opacity-60"
-                aria-hidden="true"
-              />
-              <span>Saved Jobs</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
             <Link href="/my-jobs">
               <Layers2
                 size={16}
@@ -68,6 +57,17 @@ export function UserDropdown({ email, name, image }: iAppProps) {
                 aria-hidden="true"
               />
               <span>My Job Listings</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/favorites">
+              <Heart
+                size={16}
+                strokeWidth={2}
+                className="opacity-60"
+                aria-hidden="true"
+              />
+              <span>Saved Jobs</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

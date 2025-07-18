@@ -26,14 +26,16 @@ export const jobSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
   companyLocation: z.string().min(1, "Company location is required"),
   companyLogo: z.string().min(1, "Company logo is required"),
-  companyWebsite: z.string().min(1, "Company website is required"),
+  companyWebsite: z.string().url("Please enter a valid website URL"),
   companyXAccount: z.string().optional(),
   companyDescription: z.string().min(1, "Company description is required"),
   listingDuration: z.number().min(1, "Listing duration is required"),
-  status: z.enum(["ACTIVE", "INACTIVE", "EXPIRED", "DRAFT"]).default("ACTIVE"),
-})
-
-export const editJobSchema = jobSchema.extend({
-  status: z.enum(["ACTIVE", "INACTIVE", "EXPIRED", "DRAFT"]),
+  status: z.enum(["ACTIVE", "INACTIVE", "EXPIRED", "DRAFT"]).default("DRAFT"),
 });
 
+export type JobSchemaType = z.infer<typeof jobSchema>;
+
+export const editJobSchema = jobSchema.extend({
+  // This extension remains valid as the base jobSchema now correctly handles nullability.
+  status: z.enum(["ACTIVE", "INACTIVE", "EXPIRED", "DRAFT"]).nullable(),
+})

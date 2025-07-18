@@ -15,7 +15,7 @@ import { useState } from "react"
 import type { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { jobSchema } from "@/app/utils/zodSchemas" // Ensure this is the correct import for your jobSchema
+import { jobSchema, JobSchemaType } from "@/app/utils/zodSchemas";
 import { SalaryRangeSelector } from "../general/SalaryRangeSelector"
 import JobDescriptionEditor from "../richTextEditor/JobDescriptionEditor"
 import BenefitsSelector from "../general/BenefitsSelector"
@@ -39,7 +39,7 @@ export function CreateJobForm({
   companyName,
   companyWebsite,
 }: CreateJobFormProps) {
-  const form = useForm<z.infer<typeof jobSchema>>({
+  const form = useForm<JobSchemaType>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
       benefits: [],
@@ -52,13 +52,13 @@ export function CreateJobForm({
       jobDescription: "",
       jobTitle: "",
       location: "",
-      salaryFrom: 0,
-      salaryTo: 0,
+      salaryFrom: 30000, // Set a reasonable default
+      salaryTo: 100000, // Set a reasonable default
       companyLogo: companyLogo,
       listingDuration: 30,
-      status: "ACTIVE", // Added the missing status field
+      status: "DRAFT", // Explicitly set default status
     },
-  })
+  });
 
   const [pending, setPending] = useState(false)
 

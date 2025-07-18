@@ -15,12 +15,13 @@ import { useState } from "react"
 import type { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { editJobSchema } from "@/app/utils/zodSchemas"
+import { jobSchema, JobSchemaType } from "@/app/utils/zodSchemas"
 import { SalaryRangeSelector } from "../general/SalaryRangeSelector"
 import JobDescriptionEditor from "../richTextEditor/JobDescriptionEditor"
 import BenefitsSelector from "../general/BenefitsSelector"
 import { updateJobPost } from "@/app/actions"
 import { Badge } from "../ui/badge"
+import { JobListingDurationSelector } from "../general/JobListingDurationSelector"
 
 interface iAppProps {
   jobPost: {
@@ -48,8 +49,8 @@ interface iAppProps {
 }
 
 export function EditJobForm({ jobPost }: iAppProps) {
-  const form = useForm<z.infer<typeof editJobSchema>>({
-    resolver: zodResolver(editJobSchema),
+  const form = useForm<JobSchemaType>({
+    resolver: zodResolver(jobSchema),
     defaultValues: {
       benefits: jobPost.benefits,
       companyDescription: jobPost.company.about,
@@ -65,14 +66,13 @@ export function EditJobForm({ jobPost }: iAppProps) {
       salaryTo: jobPost.salaryTo,
       companyLogo: jobPost.company.logo,
       listingDuration: jobPost.listingDuration,
-      // Provide a fallback for status if it's null or undefined
-      status: jobPost.status || "ACTIVE",
+      status: jobPost.status || "DRAFT", // Fallback to DRAFT if null
     },
-  })
+  });
 
   const [pending, setPending] = useState(false)
 
-  async function onSubmit(values: z.infer<typeof editJobSchema>) {
+  async function onSubmit(values: z.infer<typeof jobSchema>) {
     try {
       setPending(true)
       await updateJobPost(values, jobPost.id)
@@ -439,8 +439,27 @@ export function EditJobForm({ jobPost }: iAppProps) {
           </CardContent>
         </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle>Job Listing Duration</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="listingDuration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <JobListingDurationSelector field={field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
         <Button type="submit" className="w-full" disabled={pending}>
-          {pending ? "Updating Job..." : "Update Job"}
+          {pending ? "Submitting..." : "Continue"}
         </Button>
       </form>
     </Form>

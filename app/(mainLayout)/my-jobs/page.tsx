@@ -1,21 +1,6 @@
-import React from "react";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import Image from "next/image";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import Image from "next/image"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,15 +8,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal, PenBoxIcon, User2, XCircle } from "lucide-react";
-import Link from "next/link";
-
-import { EmptyState } from "@/components/general/EmptyState";
-import { prisma } from "@/app/utils/db";
-import { requireUser } from "@/app/utils/hooks";
-import { CopyLinkMenuItem } from "@/components/general/CopyLink";
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { MoreHorizontal, PenBoxIcon, User2, XCircle } from "lucide-react"
+import Link from "next/link"
+import { EmptyState } from "@/components/general/EmptyState"
+import { prisma } from "@/app/utils/db"
+import { requireUser } from "@/app/utils/hooks"
+import { CopyLinkMenuItem } from "@/components/general/CopyLink"
 
 async function getJobs(userId: string) {
   const data = await prisma.jobPost.findMany({
@@ -55,14 +39,13 @@ async function getJobs(userId: string) {
     orderBy: {
       createdAt: "desc",
     },
-  });
-
-  return data;
+  })
+  return data
 }
 
 const MyJobs = async () => {
-  const session = await requireUser();
-  const data = await getJobs(session.id as string);
+  const session = await requireUser()
+  const data = await getJobs(session.id as string)
 
   return (
     <>
@@ -77,9 +60,7 @@ const MyJobs = async () => {
         <Card>
           <CardHeader>
             <CardTitle>My Jobs</CardTitle>
-            <CardDescription>
-              Manage your job listings and applications here.
-            </CardDescription>
+            <CardDescription>Manage your job listings and applications here.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -100,7 +81,7 @@ const MyJobs = async () => {
                     <TableCell>
                       {listing.company.logo ? (
                         <Image
-                          src={listing.company.logo}
+                          src={listing.company.logo || "/placeholder.svg"}
                           alt={`${listing.company.name} logo`}
                           width={40}
                           height={40}
@@ -112,13 +93,13 @@ const MyJobs = async () => {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {listing.company.name}
-                    </TableCell>
+                    <TableCell className="font-medium">{listing.company.name}</TableCell>
                     <TableCell>{listing.jobTitle}</TableCell>
                     <TableCell>
-                      {listing.status.charAt(0).toUpperCase() +
-                        listing.status.slice(1).toLowerCase()}
+                      {/* Safely handle null status */}
+                      {listing.status
+                        ? listing.status.charAt(0).toUpperCase() + listing.status.slice(1).toLowerCase()
+                        : "Unknown Status"}
                     </TableCell>
                     <TableCell>5</TableCell>
                     <TableCell>
@@ -139,18 +120,14 @@ const MyJobs = async () => {
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
                             <Link href={`/my-jobs/${listing.id}/edit`}>
-                              <PenBoxIcon className="size-4" />
-                              Edit Job
+                              <PenBoxIcon className="size-4" /> Edit Job
                             </Link>
                           </DropdownMenuItem>
-                          <CopyLinkMenuItem
-                            jobUrl={`${process.env.NEXT_PUBLIC_URL}/job/${listing.id}`}
-                          />
+                          <CopyLinkMenuItem jobUrl={`${process.env.NEXT_PUBLIC_URL}/job/${listing.id}`} />
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild>
                             <Link href={`/my-jobs/${listing.id}/delete`}>
-                              <XCircle className="h-4 w-4" />
-                              Delete Job
+                              <XCircle className="h-4 w-4" /> Delete Job
                             </Link>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -164,7 +141,7 @@ const MyJobs = async () => {
         </Card>
       )}
     </>
-  );
-};
+  )
+}
 
-export default MyJobs;
+export default MyJobs

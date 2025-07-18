@@ -1,65 +1,55 @@
-"use client";
+"use client"
 
-import { countryList } from "@/app/utils/countriesList";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Textarea } from "../ui/textarea";
-import { XIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import Image from "next/image";
-import { toast } from "sonner";
-import { UploadDropzone } from "../general/UploadThingReExport";
-import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { jobSchema } from "@/app/utils/zodSchemas";
-import { SalaryRangeSelector } from "../general/SalaryRangeSelector";
-import JobDescriptionEditor from "../richTextEditor/JobDescriptionEditor";
-import BenefitsSelector from "../general/BenefitsSelector";
-import { updateJobPost } from "@/app/actions";
+import { countryList } from "@/app/utils/countriesList"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Input } from "../ui/input"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select"
+import { Textarea } from "../ui/textarea"
+import { XIcon } from "lucide-react"
+import { Button } from "../ui/button"
+import Image from "next/image"
+import { toast } from "sonner"
+import { UploadDropzone } from "../general/UploadThingReExport"
+import { useState } from "react"
+import type { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { jobSchema, JobSchemaType } from "@/app/utils/zodSchemas"
+import { SalaryRangeSelector } from "../general/SalaryRangeSelector"
+import JobDescriptionEditor from "../richTextEditor/JobDescriptionEditor"
+import BenefitsSelector from "../general/BenefitsSelector"
+import { updateJobPost } from "@/app/actions"
+import { Badge } from "../ui/badge"
+import { JobListingDurationSelector } from "../general/JobListingDurationSelector"
 
 interface iAppProps {
   jobPost: {
-    jobTitle: string;
-    id: string;
-    employmentType: string;
-    location: string;
-    salaryFrom: number;
-    salaryTo: number;
-    jobDescription: string;
-    benefits: string[];
-    listingDuration: number;
+    jobTitle: string
+    id: string
+    employmentType: string
+    location: string
+    salaryFrom: number
+    salaryTo: number
+    jobDescription: string
+    benefits: string[]
+    listingDuration: number
+    // Ensure these enum values exactly match your Prisma schema's JobPostStatus enum
+    // Allow status to be null, as it might come from Prisma this way
+    status: "ACTIVE" | "INACTIVE" | "EXPIRED" | "DRAFT" | null
     company: {
-      location: string;
-      name: string;
-      logo: string;
-      website: string;
-      xAccount: string | null;
-      about: string;
-    };
-  };
+      location: string
+      name: string
+      logo: string
+      website: string
+      xAccount: string | null
+      about: string
+    }
+  }
 }
 
 export function EditJobForm({ jobPost }: iAppProps) {
-  const form = useForm<z.infer<typeof jobSchema>>({
+  const form = useForm<JobSchemaType>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
       benefits: jobPost.benefits,
@@ -76,29 +66,96 @@ export function EditJobForm({ jobPost }: iAppProps) {
       salaryTo: jobPost.salaryTo,
       companyLogo: jobPost.company.logo,
       listingDuration: jobPost.listingDuration,
+      status: jobPost.status || "DRAFT", // Fallback to DRAFT if null
     },
   });
 
-  const [pending, setPending] = useState(false);
+  const [pending, setPending] = useState(false)
+
   async function onSubmit(values: z.infer<typeof jobSchema>) {
     try {
-      setPending(true);
-
-      await updateJobPost(values, jobPost.id);
+      setPending(true)
+      await updateJobPost(values, jobPost.id)
     } catch (error) {
       if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
-        toast.error("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.")
       }
     } finally {
-      setPending(false);
+      setPending(false)
     }
   }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "ACTIVE":
+        return "bg-green-100 text-green-800 border-green-200"
+      case "INACTIVE":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+      case "EXPIRED":
+        return "bg-red-100 text-red-800 border-red-200"
+      case "DRAFT":
+        return "bg-blue-100 text-blue-800 border-blue-200"
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200"
+    }
+  }
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="col-span-1   lg:col-span-2  flex flex-col gap-8"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="col-span-1 lg:col-span-2 flex flex-col gap-8">
+        {/* Job Status Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              Job Status
+              <Badge className={getStatusColor(form.watch("status"))}>{form.watch("status")}</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Status</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select job status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Job Status</SelectLabel>
+                        {/* Ensure these values exactly match your Prisma schema's JobPostStatus enum */}
+                        <SelectItem value="ACTIVE">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            Active - Job is live and accepting applications
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="INACTIVE">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                            Inactive - Job is paused and not visible to candidates
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="DRAFT">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            Draft - Job is being prepared and not yet published
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Job Information</CardTitle>
@@ -124,10 +181,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Employment Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Employment Type" />
@@ -143,7 +197,6 @@ export function EditJobForm({ jobPost }: iAppProps) {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -157,10 +210,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Location</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Location" />
@@ -185,7 +235,6 @@ export function EditJobForm({ jobPost }: iAppProps) {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -194,15 +243,10 @@ export function EditJobForm({ jobPost }: iAppProps) {
               <FormItem>
                 <FormLabel>Salary Range</FormLabel>
                 <FormControl>
-                  <SalaryRangeSelector
-                    control={form.control}
-                    minSalary={30000}
-                    maxSalary={1000000}
-                  />
+                  <SalaryRangeSelector control={form.control} minSalary={30000} maxSalary={1000000} />
                 </FormControl>
                 <FormMessage>
-                  {form.formState.errors.salaryFrom?.message ||
-                    form.formState.errors.salaryTo?.message}
+                  {form.formState.errors.salaryFrom?.message || form.formState.errors.salaryTo?.message}
                 </FormMessage>
               </FormItem>
             </div>
@@ -263,10 +307,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Location</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Location" />
@@ -291,7 +332,6 @@ export function EditJobForm({ jobPost }: iAppProps) {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -309,11 +349,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                         <span className="flex items-center justify-center px-3 border border-r-0 border-input rounded-l-md bg-muted text-muted-foreground text-sm">
                           https://
                         </span>
-                        <Input
-                          {...field}
-                          placeholder="Company Website"
-                          className="rounded-l-none"
-                        />
+                        <Input {...field} placeholder="Company Website" className="rounded-l-none" />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -332,11 +368,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                         <span className="flex items-center justify-center px-3 border border-r-0 border-input rounded-l-md bg-muted text-muted-foreground text-sm">
                           @
                         </span>
-                        <Input
-                          {...field}
-                          placeholder="Company X Account"
-                          className="rounded-l-none"
-                        />
+                        <Input {...field} placeholder="Company X Account" className="rounded-l-none" />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -352,11 +384,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                 <FormItem>
                   <FormLabel>Company Description</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Company Description"
-                      className="min-h-[120px]"
-                      {...field}
-                    />
+                    <Textarea placeholder="Company Description" className="min-h-[120px]" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -374,7 +402,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
                       {field.value ? (
                         <div className="relative w-fit">
                           <Image
-                            src={field.value}
+                            src={field.value || "/placeholder.svg"}
                             alt="Company Logo"
                             width={100}
                             height={100}
@@ -394,13 +422,11 @@ export function EditJobForm({ jobPost }: iAppProps) {
                         <UploadDropzone
                           endpoint="imageUploader"
                           onClientUploadComplete={(res) => {
-                            field.onChange(res[0].url);
-                            toast.success("Logo uploaded successfully!");
+                            field.onChange(res[0].url)
+                            toast.success("Logo uploaded successfully!")
                           }}
                           onUploadError={() => {
-                            toast.error(
-                              "Something went wrong. Please try again."
-                            );
+                            toast.error("Something went wrong. Please try again.")
                           }}
                         />
                       )}
@@ -413,10 +439,29 @@ export function EditJobForm({ jobPost }: iAppProps) {
           </CardContent>
         </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle>Job Listing Duration</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="listingDuration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <JobListingDurationSelector field={field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
         <Button type="submit" className="w-full" disabled={pending}>
           {pending ? "Submitting..." : "Continue"}
         </Button>
       </form>
     </Form>
-  );
+  )
 }

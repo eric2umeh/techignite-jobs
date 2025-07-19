@@ -47,6 +47,7 @@ interface iAppProps {
     jobDescription: string;
     benefits: string[];
     listingDuration: number;
+    status: "ACTIVE" | "INACTIVE" | "DRAFT" | "EXPIRED";
     company: {
       location: string;
       name: string;
@@ -76,6 +77,7 @@ export function EditJobForm({ jobPost }: iAppProps) {
       salaryTo: jobPost.salaryTo,
       companyLogo: jobPost.company.logo,
       listingDuration: jobPost.listingDuration,
+      status: jobPost.status,
     },
   });
 
@@ -103,6 +105,37 @@ export function EditJobForm({ jobPost }: iAppProps) {
           <CardHeader>
             <CardTitle>Job Information</CardTitle>
           </CardHeader>
+          <CardContent>
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Status</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Job Status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Status</SelectLabel>
+                      <SelectItem value="DRAFT">Draft</SelectItem>
+                      <SelectItem value="ACTIVE">Active</SelectItem>
+                      <SelectItem value="INACTIVE">Inactive</SelectItem>
+                      <SelectItem value="EXPIRED">Expired</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          </CardContent>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <FormField

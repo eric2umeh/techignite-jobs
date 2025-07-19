@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import { XIcon } from "lucide-react";
+import { Loader2, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -71,6 +71,7 @@ export function CreateJobForm({
       salaryTo: 0,
       companyLogo: companyLogo,
       listingDuration: 30,
+      status: "DRAFT",
     },
   });
 
@@ -78,14 +79,16 @@ export function CreateJobForm({
   async function onSubmit(values: z.infer<typeof jobSchema>) {
     try {
       setPending(true);
-
+      console.log("Submitting form with values:", values);
       await createJob(values);
-    } catch {
+    } catch (error) {
+      console.error("Submission error:", error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setPending(false);
     }
   }
+  console.log("Form errors:", form.formState.errors);
   return (
     <Form {...form}>
       <form
@@ -426,7 +429,14 @@ export function CreateJobForm({
           </CardContent>
         </Card>
         <Button type="submit" className="w-full" disabled={pending}>
-          {pending ? "Submitting..." : "Continue"}
+          {pending ? (
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Submitting...
+            </div>
+          ) : (
+            "Continue"
+          )}
         </Button>
       </form>
     </Form>

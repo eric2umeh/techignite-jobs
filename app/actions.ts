@@ -94,6 +94,7 @@ export async function createJobSeeker(data: z.infer<typeof jobSeekerSchema>) {
 
 export async function createJob(data: z.infer<typeof jobSchema>) {
   const user = await requireUser();
+  console.log("Creating job with data:", data);
 
   const validatedData = jobSchema.parse(data);
 
@@ -143,6 +144,7 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
       salaryTo: validatedData.salaryTo,
       listingDuration: validatedData.listingDuration,
       benefits: validatedData.benefits,
+      status: "DRAFT",
     },
   });
 
@@ -190,7 +192,7 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
     cancel_url: `${process.env.NEXT_PUBLIC_URL}/payment/cancel`,
   });
 
-  return redirect(session.url as string);
+  return redirect(session.url as string); //dddd
 }
 
 export async function updateJobPost(

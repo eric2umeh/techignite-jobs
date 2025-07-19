@@ -32,4 +32,5 @@ export const jobSchema = z.object({
   companyXAccount: z.string().optional(),
   companyDescription: z.string().min(1, "Company description is required"),
   listingDuration: z.number().min(1, "Listing duration is required"),
+  status: z.enum(["DRAFT", "ACTIVE", "INACTIVE", "EXPIRED"]),
 });

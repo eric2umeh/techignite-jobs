@@ -217,6 +217,7 @@ export async function updateJobPost(
       salaryTo: validatedData.salaryTo,
       listingDuration: validatedData.listingDuration,
       benefits: validatedData.benefits,
+      status: validatedData.status,
     },
   });
 

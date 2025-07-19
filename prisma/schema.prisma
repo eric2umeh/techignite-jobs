@@ -146,6 +146,7 @@ model JobPost {
 enum JobPostStatus {
   DRAFT
   ACTIVE
+  INACTIVE
   EXPIRED
 }
 

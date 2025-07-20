@@ -9,29 +9,35 @@ A modern job board reimagined for the TechIgnite Africa community. Built with a 
 
 ---
 
-## 🛠️ Tech Stack
+| Tech             | Description                             |
+|------------------|-----------------------------------------|
+| Next.js 14       | React-based full-stack framework        |
+| TypeScript       | Safer, typed development                |
+| Prisma           | ORM for PostgreSQL                      |
+| Neon             | PostgreSQL hosting                      |
+| Resend           | Email service                           |
+| Auth.js          | Authentication (Google)                 |
+| Inngest          | Serverless cron and event handling      |
+| Stripe           | Payment integration                     |
+| ShadCN UI        | UI Components (Radix + Tailwind)        |
+| Tailwind CSS     | Utility-first CSS                       |
+| Vercel           | Deployment                              |
 
-- **Frontend:** Next.js, TypeScript, Tailwind CSS
-- **Database:** Neon (Serverless PostgreSQL)
-- **ORM:** Prisma
-- **Auth:** Auth.js (Google OAuth), Arcjet
-- **Payments:** Stripe (for premium job posts)
-- **Emails:** Resend (transactional emails)
-- **Background Tasks:** Inngest
-- **Hosting:** Vercel (Frontend + API Routes)
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
-- 🔐 Google OAuth Sign In / Sign Up (via Auth.js)
-- 🧑‍💼 Employer & Candidate Dashboards
-- 📤 Post, Edit, Bookmark, and Apply to Jobs
-- 💳 Stripe Checkout for Premium Listings
-- 📧 Application Confirmation Emails (via Resend)
-- ⚡ Rate Limiting with Arcjet
-- 🛠 Serverless DB with Neon + Prisma
-- 📱 Fully Responsive (Mobile + Tablet)
+- 🔐 Auth.js with Google OAuth
+- 🧑‍💼 Job creation & management for employers
+- 👨‍🎓 Job browsing & bookmarking for applicants
+- 💸 Stripe integration for paid job promotions
+- 🔁 Inngest + Cron for scheduled cleanup
+- 📧 Resend integration for email notifications
+- 🌐 Responsive, mobile-friendly UI
+- 🌍 African branding and localization (customized logo + theme)
+- 🗃️ PostgreSQL DB hosted on [Neon](https://neon.tech)
+- 🚀 Hosted on [Vercel](https://vercel.com)
 
 ---
 
@@ -114,3 +120,12 @@ If you find this project helpful, please give it a ⭐ and share it to help fell
 - 🌐 [LinkedIn](https://www.linkedin.com/in/eric-umeohabike)
 - 📸 [Instagram](https://instagram.com/techigniteaf)
 - 💻 [GitHub](https://github.com/eric2umeh)
+
+## 🏷️ Badges
+
+![Vercel](https://vercelbadge.vercel.app/api/eric2umeh/techignite-jobs)
+![GitHub Stars](https://img.shields.io/github/stars/eric2umeh/techignite-jobs?style=social)
+![License](https://img.shields.io/github/license/eric2umeh/techignite-jobs)
+
+## License
+This project is licensed under the MIT License.

@@ -80,7 +80,7 @@ export function JobFilters() {
 
   return (
     <Card className="col-span-1 h-fit">
-      <CardHeader className="space-y-4">
+      <CardHeader className="space-y-2">
         <div className="flex justify-between items-center">
           <CardTitle className="text-2xl font-semibold">Filter</CardTitle>
           <Button
@@ -95,8 +95,8 @@ export function JobFilters() {
         </div>
         <Separator />
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-4">
+      <CardContent className="space-y-3">
+        <div className="space-y-1">
           <Label className="text-lg font-semibold">Job Type</Label>
           <div className="grid grid-cols-2 gap-4">
             {jobTypes.map((type) => (
@@ -119,7 +119,7 @@ export function JobFilters() {
           </div>
         </div>
         <Separator />
-        <div className="space-y-4">
+        <div className="space-y-1">
           <Label className="text-lg font-semibold">Location</Label>
           <Select value={currentLocation} onValueChange={handleLocationChange}>
             <SelectTrigger>

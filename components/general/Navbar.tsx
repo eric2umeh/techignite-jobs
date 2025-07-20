@@ -1,9 +1,7 @@
 import Link from "next/link";
-
 import { Button, buttonVariants } from "../ui/button";
 import Image from "next/image";
 import Logo from "@/public/logo.png";
-
 import { Menu } from "lucide-react";
 import {
   Sheet,
@@ -24,7 +22,7 @@ export async function Navbar() {
     <nav className="flex justify-between items-center py-5">
       <Link href="/" className="flex items-center gap-2">
         <Image src={Logo} alt="TechIgnite Jobs" width={40} height={40} />
-        <h1 className="text-lg md:text-2xl font-bold">
+        <h1 className="text-sm md:text-2xl font-bold">
           TechIgnite <span className="text-primary">Jobs</span>
         </h1>
       </Link>
@@ -54,6 +52,13 @@ export async function Navbar() {
       {/* Mobile Navigation */}
       <div className="md:hidden flex items-center gap-4">
         <ThemeToggle />
+        <Link
+          href="/post-job"
+          className={buttonVariants({ size: "sm" })}
+        >
+          Post
+        </Link>
+        
         {session?.user ? (
           <UserDropdown
             email={session.user.email as string}
@@ -70,7 +75,7 @@ export async function Navbar() {
             <SheetContent>
               <SheetHeader className="text-left">
                 <SheetTitle>
-                  TechIgnite <span className="text-primary">Jobsdd</span>
+                  TechIgnite <span className="text-primary">Jobs</span>
                 </SheetTitle>
                 <SheetDescription>
                   Find or post your next job opportunity
@@ -80,19 +85,19 @@ export async function Navbar() {
               <div className="flex flex-col gap-4 mt-6">
                 <Link
                   href="/"
-                  className="text-lg px-4 py-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors duration-200"
+                  className="text-lg px-4 py-2 rounded-md hover:bg-accent transition-colors duration-200"
                 >
                   Find New Job
                 </Link>
                 <Link
                   href="/post-job"
-                  className="text-lg px-4 py-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors duration-200"
+                  className="text-lg px-4 py-2 rounded-md hover:bg-accent transition-colors duration-200"
                 >
                   Post a Job
                 </Link>
                 <Link
                   href="/login"
-                  className="text-lg px-4 py-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors duration-200"
+                  className="text-lg px-4 py-2 rounded-md hover:bg-accent transition-colors duration-200"
                 >
                   Login
                 </Link>

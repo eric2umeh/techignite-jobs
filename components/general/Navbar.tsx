@@ -24,7 +24,7 @@ export async function Navbar() {
     <nav className="flex justify-between items-center py-5">
       <Link href="/" className="flex items-center gap-2">
         <Image src={Logo} alt="TechIgnite Jobs" width={40} height={40} />
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-lg md:text-2xl font-bold">
           TechIgnite <span className="text-primary">Jobs</span>
         </h1>
       </Link>
